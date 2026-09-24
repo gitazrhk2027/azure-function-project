@@ -7,21 +7,22 @@ namespace OrderProcessingFunction;
 
 public class ProcessOrder
 {
-    private readonly ILogger<ProcessOrder> _logger;
+    private readonly ILogger _logger;
 
-    public ProcessOrder(ILogger<ProcessOrder> logger)
+    public ProcessOrder(ILogger logger)
     {
         _logger = logger;
     }
 
     [Function("ProcessOrder")]
-    public HttpResponseData Run(
+    public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
     {
         _logger.LogInformation("ProcessOrder function received a request.");
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        response.WriteString("Order processed successfully!");
+
+        await response.WriteStringAsync("Order processed successfully!");
 
         return response;
     }
