@@ -7,9 +7,9 @@ namespace OrderProcessingFunction;
 
 public class ProcessOrder
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ProcessOrder> _logger;
 
-    public ProcessOrder(ILogger logger)
+    public ProcessOrder(ILogger<ProcessOrder> logger)
     {
         _logger = logger;
     }
