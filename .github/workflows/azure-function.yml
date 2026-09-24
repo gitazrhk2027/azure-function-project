@@ -1,12 +1,17 @@
-name: Build Azure Function
+```yaml
+name: Build and Deploy Azure Function
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,8 +32,16 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release --output ./publish
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Azure Login
+        uses: azure/login@v2
         with:
-          name: azure-function-package
-          path: ./publish
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Function
+        uses: Azure/functions-action@v1
+        with:
+          app-name: YOUR_FUNCTION_APP_NAME
+          package: ./publish
+```
